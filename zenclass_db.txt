@@ -1,0 +1,637 @@
+//creating zenClassProgramme db
+use zenClassProgramme;
+
+
+//inserting users to user collection
+db.users.insertMany([
+    {
+        uid : 1,
+        uname : "Shruthi",
+        u_email: "shruthi33@gmail.com",
+    },
+    {
+        uid : 2,
+        uname : "Sonu",
+        u_email: "sonu12@gmail.com",
+    },
+    {
+        uid : 3,
+        uname : "Pavan",
+        u_email: "pavanb@gmail.com",
+    },
+    {
+        uid : 4,
+        uname : "Sandeep",
+        u_email: "sandy45@gmail.com",
+    },
+    {
+        uid : 5,
+        uname : "Thaman",
+        u_email: "thaman6@gmail.com",
+    }    
+])
+
+//inserting documents to codekata collection
+db.codekata.insertMany([
+    {
+        c_id: 1,
+        user_id: 3,
+        problems_solved: 10
+    },
+    {
+        c_id: 2,
+        user_id: 1,
+        problems_solved: 6
+    },
+    {
+        c_id: 3,
+        user_id: 2,
+        problems_solved: 4
+    },
+    {
+        c_id: 4,
+        user_id: 5,
+        problems_solved: 7
+    },
+    {
+        c_id: 5,
+        user_id: 4,
+        problems_solved: 5
+    },
+])
+
+//inserting documents into attendance collection
+db.attendance.insertMany([
+    {
+        a_id: 1,
+        u_id: 1,
+        date: ISODate("2020-10-14"),
+        present: true
+    },
+    {
+        a_id: 2,
+        u_id: 1,
+        date: ISODate("2020-10-20"),
+        present: true
+    },
+    {
+        a_id: 3,
+        u_id: 2,
+        date: ISODate("2020-10-13"),
+        present: true
+    },
+    {
+        a_id: 4,
+        u_id: 2,
+        date: ISODate("2020-10-30"),
+        present: true
+    },
+    {
+        a_id: 5,
+        u_id: 3,
+        date: ISODate("2020-10-18"),
+        present: true
+    },
+    {
+        a_id: 6,
+        u_id: 3,
+        date: ISODate("2020-11-14"),
+        present: true
+    },
+])
+
+//inserting documents into topics collection
+db.topics.insertMany([
+    {
+        t_id: 1,
+        topic: "HTML and CSS",
+        month: "October"
+    },
+    {
+        t_id: 2,
+        topic: "JavaScript",
+        month: "October"
+    },
+    {
+        t_id: 3,
+        topic: "React",
+        month: "November"
+    },
+    {
+        t_id: 4,
+        topic: "Databse",
+        month: "December"
+    },
+    {
+        t_id: 5,
+        topic: "NodeJS",
+        month: "December"
+    },
+    
+])
+
+//inserting documents into tasks collection
+
+db.tasks.insertMany([
+    {
+        task_id: 1,
+        topic_id: 2,
+        user_id: 3,
+        task_name: "Practice Promises",
+        submitted: true
+    },
+    {
+        task_id: 2,
+        topic_id: 1,
+        user_id: 3,
+        task_name: "Explain HTML DOM working",
+        submitted: false
+    },
+    {
+        task_id: 3,
+        topic_id: 1,
+        user_id: 1,
+        task_name: "How does HTML DOM work",
+        submitted: true
+    },
+    {
+        task_id: 4,
+        topic_id: 2,
+        user_id: 1,
+        task_name: "Practice Promises",
+        submitted: true
+    },
+    {
+        task_id: 5,
+        topic_id: 2,
+        user_id: 4,
+        task_name: "What is callback hell in JS",
+        submitted: true
+    },
+    
+])
+
+//inserting documents into company_drives collection
+
+db.company_drive.insertMany([
+    {
+        c_id: 1,
+        company_name: "Infosys",
+        date: ISODate("2020-10-14"),
+    },
+    {
+        c_id: 2,
+        company_name: "TCS",
+        date: ISODate("2020-10-20"),
+    },
+    {
+        c_id: 3,
+        company_name: "Oracle",
+        date: ISODate("2020-10-13"),
+    },
+    {
+        c_id: 4,
+        company_name: "IBM",
+        date: ISODate("2020-10-30"),
+    },
+    {
+        c_id: 5,
+        company_name: "Google",
+        date: ISODate("2020-10-18"),
+    },
+     {
+        c_id: 6,
+        company_name: "Congnizant",
+        date: ISODate("2020-10-14"),
+    },
+     {
+        c_id: 7,
+        company_name: "TCS",
+        date: ISODate("2020-10-16"),
+    },
+])
+
+//inserting documents into mentors collection
+
+db.mentors.insertMany([
+    {
+        mentor_id: 1,
+        mentor_name: "Sunny",
+        mentee_count: 10,
+    },
+    {
+        mentor_id: 1,
+        mentor_name: "Mohan",
+        mentee_count: 8,
+    },
+    {
+        mentor_id: 1,
+        mentor_name: "Deepika",
+        mentee_count: 15,
+    },
+    {
+        mentor_id: 1,
+        mentor_name: "Gopi",
+        mentee_count: 4,
+    },
+    {
+        mentor_id: 1,
+        mentor_name: "Rekha",
+        mentee_count: 12,
+    },
+])
+
+
+========================================================
+============================================================
+
+1) Find all the topics and tasks which are thought in the month of October
+
+db.tasks.aggregate([
+    {
+        $lookup : {
+            from: "topics",
+            localField: "topic_id",
+            foreignField: "t_id",
+            as: "topics",
+        },
+    },
+    {
+        $match : {
+            "topics.month" : "October",
+        },
+    },
+    {
+        $project : {
+            "topics.topic": 1,
+            "task_name" : 1,
+            "_id" : 0,
+        },   
+    },
+]).pretty()
+
+
+2) Find all the company drives which appeared between 15 oct-2020 and 31-oct-2020
+
+db.company_drive.find({date: {$gte: ISODate("2020-10-15"), $lte: ISODate("2020-10-31")}})
+
+
+3) Find all the company drives and students who are appeared for the placement.
+
+ db.company_drive.aggregate([
+	{
+        $lookup: {
+            from: "attendance",
+            localField: "date",
+            foreignField: "date",
+            as: "attendance",
+        },
+    },
+    {
+        $match: {
+            attendance: {
+                $not: {
+                    $size: 0
+                }
+            }
+        }
+    },
+    {
+        $lookup: {
+            from: "users",
+            localField: "attendance.u_id",
+            foreignField: "uid",
+            as: "students",
+        },
+    },
+    {
+        $project: {
+            company_name: 1,
+            students: 1,
+            _id: 0,
+        }
+    },
+]).pretty();
+
+4) Find the number of problems solved by the user in codekata
+
+db.codekata.aggregate([
+    {
+        $project:
+        {
+            _id:0,
+            user_id: 1,
+            problems_solved: 1
+        }
+    },
+    {
+        $group:
+        {
+            _id: "$user_id",
+            problems_solved: {$push: "$problems_solved"}
+        }
+    },
+
+    
+])
+
+5) Find all the mentors with who has the mentee's count more than 15
+
+db.mentors.find({mentee_count: {$gt: 15}}).pretty()
+
+
+6) Find the number of users who are absent and task is not submitted  between 15 oct-2020 and 31-oct-2020
+
+db.attendance.aggregate([
+    {
+        $match: {
+            date: {$gte: ISODate("2020-10-15"), $lte: ISODate("2020-10-31")},
+            present : false,
+        }
+    },
+    {
+        $lookup : {
+            from: "tasks",
+            localField: "u_id",
+            foreignField: "user_id",
+            as: "tasks",
+        }
+    },
+    {
+        $match: {
+            "tasks.submitted": false,
+        }
+    },
+    {
+        $group: {
+            _id: 0,
+            count: {$sum: 1 }
+        }
+    },
+]).pretty();
+
+
+========================================================
+============================================================
+
+
+
+//users collection output
+> db.users.find().pretty();
+{
+        "_id" : ObjectId("642c66aef56e0a15b3364fd4"),
+        "uid" : 1,
+        "uname" : "Shruthi",
+        "u_email" : "shruthi33@gmail.com"
+}
+{
+        "_id" : ObjectId("642c66aef56e0a15b3364fd5"),
+        "uid" : 2,
+        "uname" : "Sonu",
+        "u_email" : "sonu12@gmail.com"
+}
+{
+        "_id" : ObjectId("642c66aef56e0a15b3364fd6"),
+        "uid" : 3,
+        "uname" : "Pavan",
+        "u_email" : "pavanb@gmail.com"
+}
+{
+        "_id" : ObjectId("642c66aef56e0a15b3364fd7"),
+        "uid" : 4,
+        "uname" : "Sandeep",
+        "u_email" : "sandy45@gmail.com"
+}
+{
+        "_id" : ObjectId("642c66aef56e0a15b3364fd8"),
+        "uid" : 5,
+        "uname" : "Thaman",
+        "u_email" : "thaman6@gmail.com"
+}
+>
+
+//codekata collection output
+> db.codekata.find().pretty();
+{
+        "_id" : ObjectId("642c6879f56e0a15b3364fd9"),
+        "c_id" : 1,
+        "user_id" : 3,
+        "problems_solved" : 10
+}
+{
+        "_id" : ObjectId("642c6879f56e0a15b3364fda"),
+        "c_id" : 2,
+        "user_id" : 1,
+        "problems_solved" : 6
+}
+{
+        "_id" : ObjectId("642c6879f56e0a15b3364fdb"),
+        "c_id" : 3,
+        "user_id" : 2,
+        "problems_solved" : 4
+}
+{
+        "_id" : ObjectId("642c6879f56e0a15b3364fdc"),
+        "c_id" : 4,
+        "user_id" : 5,
+        "problems_solved" : 7
+}
+{
+        "_id" : ObjectId("642c6879f56e0a15b3364fdd"),
+        "c_id" : 5,
+        "user_id" : 4,
+        "problems_solved" : 5
+}
+>
+
+
+//attendance collection output
+> db.attendance.find().pretty();
+{
+        "_id" : ObjectId("642c6a7cf56e0a15b3364fde"),
+        "a_id" : 1,
+        "u_id" : 1,
+        "date" : "2020-10-14",
+        "present" : true
+}
+{
+        "_id" : ObjectId("642c6a7cf56e0a15b3364fdf"),
+        "a_id" : 2,
+        "u_id" : 1,
+        "date" : "2020-10-20",
+        "present" : true
+}
+{
+        "_id" : ObjectId("642c6a7cf56e0a15b3364fe0"),
+        "a_id" : 3,
+        "u_id" : 2,
+        "date" : "2020-10-13",
+        "present" : true
+}
+{
+        "_id" : ObjectId("642c6a7cf56e0a15b3364fe1"),
+        "a_id" : 4,
+        "u_id" : 2,
+        "date" : "2020-10-30",
+        "present" : true
+}
+{
+        "_id" : ObjectId("642c6a7cf56e0a15b3364fe2"),
+        "a_id" : 5,
+        "u_id" : 3,
+        "date" : "2020-10-18",
+        "present" : true
+}
+{
+        "_id" : ObjectId("642c6a7cf56e0a15b3364fe3"),
+        "a_id" : 6,
+        "u_id" : 3,
+        "date" : "2020-11-14",
+        "present" : true
+}
+>
+
+//topics collection output
+> db.topics.find().pretty();
+{
+        "_id" : ObjectId("642c6bbcf56e0a15b3364fe4"),
+        "t_id" : 1,
+        "topic" : "HTML and CSS",
+        "month" : "October"
+}
+{
+        "_id" : ObjectId("642c6bbcf56e0a15b3364fe5"),
+        "t_id" : 2,
+        "topic" : "JavaScript",
+        "month" : "October"
+}
+{
+        "_id" : ObjectId("642c6bbcf56e0a15b3364fe6"),
+        "t_id" : 3,
+        "topic" : "React",
+        "month" : "November"
+}
+{
+        "_id" : ObjectId("642c6bbcf56e0a15b3364fe7"),
+        "t_id" : 4,
+        "topic" : "Databse",
+        "month" : "December"
+}
+{
+        "_id" : ObjectId("642c6bbcf56e0a15b3364fe8"),
+        "t_id" : 5,
+        "topic" : "NodeJS",
+        "month" : "December"
+}
+
+//tasks collection output
+> db.tasks.find().pretty();
+{
+        "_id" : ObjectId("642c6dd3f56e0a15b3364fe9"),
+        "task_id" : 1,
+        "topic_id" : 2,
+        "user_id" : 3,
+        "task_name" : "Practice Promises",
+        "submitted" : true
+}
+{
+        "_id" : ObjectId("642c6dd3f56e0a15b3364fea"),
+        "task_id" : 2,
+        "topic_id" : 1,
+        "user_id" : 3,
+        "task_name" : "Explain HTML DOM working",
+        "submitted" : false
+}
+{
+        "_id" : ObjectId("642c6dd3f56e0a15b3364feb"),
+        "task_id" : 3,
+        "topic_id" : 1,
+        "user_id" : 1,
+        "task_name" : "How does HTML DOM work",
+        "submitted" : true
+}
+{
+        "_id" : ObjectId("642c6dd3f56e0a15b3364fec"),
+        "task_id" : 4,
+        "topic_id" : 2,
+        "user_id" : 1,
+        "task_name" : "Practice Promises",
+        "submitted" : true
+}
+{
+        "_id" : ObjectId("642c6dd3f56e0a15b3364fed"),
+        "task_id" : 5,
+        "topic_id" : 2,
+        "user_id" : 4,
+        "task_name" : "What is callback hell in JS",
+        "submitted" : true
+}
+
+//company_drives collection output
+> db.company_drive.find().pretty();
+{
+        "_id" : ObjectId("642c6f13f56e0a15b3364fee"),
+        "c_id" : 1,
+        "company_name" : "Infosys",
+        "date" : "2020-10-14"
+}
+{
+        "_id" : ObjectId("642c6f13f56e0a15b3364fef"),
+        "c_id" : 2,
+        "company_name" : "TCS",
+        "date" : "2020-10-20"
+}
+{
+        "_id" : ObjectId("642c6f13f56e0a15b3364ff0"),
+        "c_id" : 3,
+        "company_name" : "Oracle",
+        "date" : "2020-10-13"
+}
+{
+        "_id" : ObjectId("642c6f13f56e0a15b3364ff1"),
+        "c_id" : 4,
+        "company_name" : "IBM",
+        "date" : "2020-10-30"
+}
+{
+        "_id" : ObjectId("642c6f13f56e0a15b3364ff2"),
+        "c_id" : 5,
+        "company_name" : "Google",
+        "date" : "2020-10-18"
+}
+
+//mentors collection output
+
+> db.mentors.find().pretty();
+{
+        "_id" : ObjectId("642c6fb8f56e0a15b3364ff3"),
+        "mentor_id" : 1,
+        "mentor_name" : "Sunny",
+        "mentee_count" : 10
+}
+{
+        "_id" : ObjectId("642c6fb8f56e0a15b3364ff4"),
+        "mentor_id" : 1,
+        "mentor_name" : "Mohan",
+        "mentee_count" : 8
+}
+{
+        "_id" : ObjectId("642c6fb8f56e0a15b3364ff5"),
+        "mentor_id" : 1,
+        "mentor_name" : "Deepika",
+        "mentee_count" : 15
+}
+{
+        "_id" : ObjectId("642c6fb8f56e0a15b3364ff6"),
+        "mentor_id" : 1,
+        "mentor_name" : "Gopi",
+        "mentee_count" : 4
+}
+{
+        "_id" : ObjectId("642c6fb8f56e0a15b3364ff7"),
+        "mentor_id" : 1,
+        "mentor_name" : "Rekha",
+        "mentee_count" : 12
+}
+
+
